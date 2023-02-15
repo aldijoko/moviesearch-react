@@ -9,14 +9,19 @@ const API_MOVIE = 'https://api.themoviedb.org/3/movie/popular?api_key=70bde69caf
 // console.log(API_URL)
 const App = () => {
     const [allMovies, setAllMovies] = useState([]);
-    const [movies, setMovies] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
 
-    const searchMovies = async (title) => {
+    // const searchMovies = async (title) => {
+    //     const res = await fetch(`${API_URL}&language=en-US&query=${title}&page=1&include_adult=false`);
+    //     const data = await res.json();
+    //     setMovies(data.results);
+    //     setMovies(title)
+    // }
+
+    const searchingMovies = async (title) => {
         const res = await fetch(`${API_URL}&language=en-US&query=${title}&page=1&include_adult=false`);
         const data = await res.json();
-
-        setMovies(data.results);
+        title = data.results
+        setAllMovies(title)
     }
 
     const listMovies = async () => {
@@ -28,16 +33,12 @@ const App = () => {
 
     useEffect(() => {
         listMovies();
-        searchMovies('avengers');
     }, [])
 
     return (
         <div className="w-full h-full flex">
             <div className="w-64 h-full border-r-2 shadow-md p-2 fixed">
-                <Sidebar 
-                    onClick={() => searchMovies(searchTerm)} 
-                    searchValue={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)}/>
+                <Sidebar onChange={(e) => searchingMovies(e.target.value)} />
             </div>
             <div className="w-full p-3 ml-64">
                 <div className="p-5">
