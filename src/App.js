@@ -5,14 +5,10 @@ import Sidebar from "./Sidebar";
 
 
 const API_URL = `https://api.themoviedb.org/3/search/movie?api_key=70bde69caffef0294416c72116362f3d`
-const movieTest = 
-    {
-        "poster_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
-        "release_date": "2018-04-25",
-        "title": "Avengers: Infinity War",
-    }
+const API_MOVIE = 'https://api.themoviedb.org/3/movie/popular?api_key=70bde69caffef0294416c72116362f3d&language=en-US&page=1'
 // console.log(API_URL)
 const App = () => {
+    const [allMovies, setAllMovies] = useState([]);
     const [movies, setMovies] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -23,7 +19,15 @@ const App = () => {
         setMovies(data.results);
     }
 
+    const listMovies = async () => {
+        const res = await fetch(API_MOVIE);
+        const data = await res.json();
+        // console.log(data.results)
+        setAllMovies(data.results);
+    }
+
     useEffect(() => {
+        listMovies();
         searchMovies('avengers');
     }, [])
 
@@ -39,9 +43,9 @@ const App = () => {
                 <div className="p-5">
                     <h1 className="text-2xl text-gray-500 uppercase">Your Recent Movies</h1>
                         {
-                            movies?.length > 0 ? (
+                            allMovies?.length > 0 ? (
                                 <div className="w-full grid grid-cols-5 gap-x-5 gap-y-8 py-5">
-                                    {movies.map((movie) => {
+                                    {allMovies.map((movie) => {
                                         return (
                                             <div className="w-full p-2 border rounded-md hover:scale-105 hover:cursor-pointer transition duration-500">
                                             <MovieCard movie={movie} />
